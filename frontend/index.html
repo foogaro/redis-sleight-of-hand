@@ -32,6 +32,7 @@
     </style>
 </head>
 <body>
+    <input type="text" name="api2call" value="http://34.34.172.129:3000/api/data?param1=A&param2=B&param3=C" id="api2call">
     <button onclick="fetchData()">Chiamata API</button>
 
     <!-- Overlay oscurato -->
@@ -46,9 +47,10 @@
     <script>
         async function fetchData() {
             try {
-                let response = await fetch('URL_DELLA_TUA_API'); // Sostituisci con l'URL della tua API
+                let api2call = document.getElementById('api2call').value;
+                let response = await fetch(api2call);
                 let data = await response.json();
-                
+
                 document.getElementById('data').textContent = JSON.stringify(data, null, 2);
                 showPopup();
             } catch (error) {
