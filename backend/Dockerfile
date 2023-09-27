@@ -1,6 +1,10 @@
 # Utilizza una versione LTS di Node.js come immagine base
 FROM node:14
 
+RUN npm install -g fastify
+
+RUN npm i @fastify/cors
+
 # Crea una directory di lavoro nel container
 WORKDIR /usr/src/app
 
@@ -18,4 +22,3 @@ EXPOSE 3000
 
 # Comando da eseguire quando il container viene avviato
 CMD ["node", "server.js"]
-

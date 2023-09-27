@@ -1,6 +1,13 @@
 const fastify = require('fastify')({ logger: true });
 
+const cors = require('@fastify/cors');
+
 const PORT = 3000;
+
+// CORS enabled
+fastify.register(cors, {
+  origin: "*"
+});
 
 // Endpoint che accetta 3 parametri come input
 fastify.get('/api/data', (request, reply) => {
@@ -20,8 +27,10 @@ fastify.get('/api/data', (request, reply) => {
         receivedParam2: param2,
         receivedParam3: param3
     };
-
-    reply.send(responseData);
+    console.log("Ma quanto ce vo???")
+    setTimeout(function() {
+        reply.send(responseData);
+    }, 5000);
 });
 
 fastify.listen(PORT, '0.0.0.0', (err, address) => {
@@ -31,4 +40,3 @@ fastify.listen(PORT, '0.0.0.0', (err, address) => {
     }
     fastify.log.info(`Server in ascolto alla porta ${address}`);
 });
-
