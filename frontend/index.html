@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chiamata API</title>
+    <title>Redis Sleight of Hand</title>
     <style>
-        /* Stili per il div pop-up */
         #popup {
             display: none;
             position: fixed;
@@ -18,7 +17,6 @@
             z-index: 1000;
         }
 
-        /* Sfondo oscurato quando il pop-up è visibile */
         #overlay {
             display: none;
             position: fixed;
@@ -29,43 +27,61 @@
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 999;
         }
+        
+        #backend {
+            filter: grayscale(100%);
+        }
+        #backend:hover {
+            filter: grayscale(0%);
+            cursor: pointer;
+        }
+
+        #sidecar {
+            filter: grayscale(100%);
+        }
+        #sidecar:hover {
+            filter: grayscale(0%);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <input type="text" name="api2call" value="http://34.34.172.129:3000/api/data?param1=A&param2=B&param3=C" id="api2call">
-    <button onclick="fetchData()">Chiamata API</button>
-
-    <!-- Overlay oscurato -->
-    <div id="overlay"></div>
-
-    <!-- Pop-up per mostrare i dati -->
-    <div id="popup">
-        <button onclick="closePopup()">Chiudi</button>
-        <div id="data"></div>
-    </div>
+    <p align="center">
+        <img id="thinking" src="thinking.png" height="100" /><br/><br/>
+        <img id="backend" title="Backend" src="cubes.png" height="100" onclick="callBackend()"/>&nbsp;&nbsp;&nbsp;<img id="sidecar" title="Sidecar" src="sidecar.png" height="100" onclick="callSidecar()"/><br/><br/><br/>
+        
+        <b>Response:</b><br/>
+        <textarea id="response" name="response" rows="8" cols="40" style="border-width: medium;"></textarea>
+    </p>
 
     <script>
-        async function fetchData() {
+        async function callBackend() {
             try {
-                let api2call = document.getElementById('api2call').value;
-                let response = await fetch(api2call);
-                let data = await response.json();
-
-                document.getElementById('data').textContent = JSON.stringify(data, null, 2);
-                showPopup();
+                let api2call = "http://" + location.hostname + ":3000/api/data?param1=A&param2=B&param3=C"
+                fetchData(api2call);
             } catch (error) {
-                console.error("Errore durante la chiamata API:", error);
+                console.error("Error while calling the REST API:", error);
+            }
+        }
+        async function callSidecar() {
+            try {
+                let api2call = "http://" + location.hostname + ":8000/api/data?param1=A&param2=B&param3=C";
+                fetchData(api2call);
+            } catch (error) {
+                console.error("Error while calling the REST API:", error);
             }
         }
 
-        function showPopup() {
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+        async function fetchData(api2call) {
+            try {
+                document.getElementById('response').textContent = "Calling API at:\r\n" + api2call;
+                let response = await fetch(api2call);
+                let data = await response.json();
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error("Error while calling the API:", error);
+            }
         }
     </script>
 </body>
