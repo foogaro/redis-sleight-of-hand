@@ -27,7 +27,7 @@ fastify.get('/api/data', (request, reply) => {
         receivedParam2: param2,
         receivedParam3: param3
     };
-    console.log("Ma quanto ce vo???")
+    console.log("Ma quanto ce vò???")
     setTimeout(function() {
         reply.send(responseData);
     }, 5000);

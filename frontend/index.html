@@ -57,7 +57,7 @@
     <script>
         async function callBackend() {
             try {
-                let api2call = "http://" + location.hostname + ":3000/api/data?param1=A&param2=B&param3=C"
+                let api2call = "http://backend:3000/api/data?param1=A&param2=B&param3=C"
                 fetchData(api2call);
             } catch (error) {
                 console.error("Error while calling the REST API:", error);
@@ -65,7 +65,7 @@
         }
         async function callSidecar() {
             try {
-                let api2call = "http://" + location.hostname + ":8000/api/data?param1=A&param2=B&param3=C";
+                let api2call = "http://nginx:8000/api/data?param1=A&param2=B&param3=C";
                 fetchData(api2call);
             } catch (error) {
                 console.error("Error while calling the REST API:", error);

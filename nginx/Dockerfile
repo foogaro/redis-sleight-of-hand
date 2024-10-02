@@ -1,4 +1,5 @@
 # Usa l'immagine ufficiale di OpenResty come base
+#FROM openresty/openresty:1.25.3.2-alpine-apk
 FROM openresty/openresty:latest
 
 # Installa le dipendenze e luarocks
