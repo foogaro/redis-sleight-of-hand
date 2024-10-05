@@ -1,6 +1,7 @@
 # Utilizza una versione LTS di Node.js come immagine base
 #FROM node:14
-FROM node:lts-bookworm
+#FROM node:lts-bookworm
+FROM node:20.18.0-bullseye-slim
 
 # Crea una directory di lavoro nel container
 WORKDIR /usr/src/app
