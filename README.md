@@ -2,11 +2,7 @@
 
 ## Quick and dirty
 
-First this:
-```bash
-docker-compose build
-```
-Next this:
+Do this:
 
 ```bash
 docker-compose up
@@ -16,7 +12,7 @@ Done.
 ## Clean steps
 
 ### Introduction
-You have a bunch of micro services that call a legacy system through a REST API to execute some heavy load on the database. Slow queires, so to speak.
+You have a bunch of microservices that call a legacy system through a REST API to execute some heavy load on the database. Slow queries, so to speak.
 
 The bad news is that you **cannot** touch the code.
 
@@ -72,6 +68,7 @@ server {
     }
 }
 ```
+
 #### Lua Redis configuration file
 ```lua
 local redis = require "resty.redis"
@@ -79,7 +76,7 @@ local red = redis:new()
 
 red:set_timeouts(1000, 1000, 1000) -- 1 sec
 
-local ok, err = red:connect(ngx.var.host, 6379)
+local ok, err = red:connect('172.32.0.3', 6379)
 if not ok then
     ngx.log(ngx.ERR, "Error while connecting to Redis: ", err)
     return
@@ -87,7 +84,6 @@ end
 
 local res, err = red:get(ngx.var.request_uri)
 if res ~= ngx.null then
-    -- Se presente in cache, servilo
     ngx.log(ngx.INFO, "Get the result directly from Redis cache.")
     ngx.print(res)
     return
@@ -107,4 +103,4 @@ ngx.print(res.body)
 ```
 
 ## Conclusion
-The client application can now benefit from a trasparent and additional layer which automatically caches the requests based on the uri.
+The client application can now benefit from a transparent and additional layer which automatically caches the requests based on the uri.
