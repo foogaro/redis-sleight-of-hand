@@ -6,9 +6,6 @@ red:set_timeouts(1000, 1000, 1000) -- 1 sec
 -- Connettiti a Redis
 ---local ok, err = red:connect('ngx.var.host', 6379)
 local ok, err = red:connect('172.32.0.3', 6379)
-ngx.log(ngx.INFO, "ngx.var.host: ", ngx.var.host)
-ngx.log(ngx.INFO, "OK: ", ok)
-ngx.log(ngx.INFO, "ERR: ", err)
 if not ok then
     ngx.log(ngx.ERR, "Errore durante la connessione a Redis: ", err)
     return
