@@ -77,7 +77,6 @@
                 updateResponse("Calling API at: " + api2call);
                 let response = await fetch(api2call);
                 let data = await response.json();
-
                 updateResponse("Response: " + JSON.stringify(data, null, 2));
             } catch (error) {
                 updateResponse("Error: " + error);
