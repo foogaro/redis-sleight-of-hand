@@ -3,34 +3,36 @@ local red = redis:new()
 
 red:set_timeouts(1000, 1000, 1000) -- 1 sec
 
--- Connettiti a Redis
----local ok, err = red:connect('ngx.var.host', 6379)
+-- Connect to Redis
+--local ok, err = red:connect('ngx.var.host', 6379)
 local ok, err = red:connect('172.32.0.3', 6379)
 if not ok then
-    ngx.log(ngx.ERR, "Errore durante la connessione a Redis: ", err)
+    ngx.log(ngx.ERR, "Error connecting to Redis: ", err)
     return
 end
 
--- Prova a recuperare la risposta dalla cache usando l'URI come chiave
+-- Check if the request has already been processed
 local res, err = red:get(ngx.var.request_uri)
 if res ~= ngx.null then
-    -- Se presente in cache, servilo
-    ngx.log(ngx.INFO, "Prendo il risultato direttamente dalla cache di Redis.")
-    ngx.print(res)
+    -- If present in cache, return error
+    ngx.log(ngx.INFO, "Request already processed by the backend.")
+    ngx.status = 409  -- Conflict status code
+    ngx.header.content_type = "application/json"
+    ngx.print('{"error": "Request already processed by the backend.", "message": "The request has been already processed by the backend."}')
     return
 end
 
--- Se non in cache, effettua la richiesta al backend
-ngx.log(ngx.INFO, "Richiesta non memorizzata nella cache di Redis.")
+-- If not in cache, proceed with the backend
+ngx.log(ngx.INFO, "Request can be processed by the backend.")
 res = ngx.location.capture("/backend" .. ngx.var.request_uri)
 
--- Se la risposta e' buona memorizza la risposta in Redis con un tempo di scadenza di 10 minuti (600 secondi)
+-- If the response is good, save the request (uri).
 if res.status == 200 then
-    local ok, err = red:setex(ngx.var.request_uri, 600, res.body)
+    local ok, err = red:set(ngx.var.request_uri, ngx.var.request_uri)
     if not ok then
-        ngx.log(ngx.ERR, "Ops, non è stato possibile memorizare la richiesta nella cache di Redis: ", err)
+        ngx.log(ngx.ERR, "Failed to save the request: ", err)
     end
 end
 
--- Invia la risposta al client
+-- Send the response to the client
 ngx.print(res.body)

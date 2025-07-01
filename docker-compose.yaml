@@ -2,7 +2,7 @@ services:
   nginx:
     build:
       context: ./nginx
-    image: foogaro/redis-sleight-of-hand-nginx
+    image: ruurd/nginx
     container_name: nginx
     hostname: nginx
     ports:
@@ -12,7 +12,7 @@ services:
         ipv4_address: 172.32.0.2
 
   redis:
-    image: redis:7.4.0
+    image: redis:8.0.2-alpine
     container_name: redis
     hostname: redis
     ports:
@@ -24,7 +24,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    image: foogaro/redis-sleight-of-hand-frontend
+    image: ruurd/frontend
     container_name: frontend
     hostname: frontend
     ports:
@@ -38,7 +38,7 @@ services:
   backend:
     build:
       context: ./backend
-    image: foogaro/redis-sleight-of-hand-backend
+    image: ruurd/backend
     container_name: backend
     hostname: backend
     ports:

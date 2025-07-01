@@ -1,26 +1,14 @@
-# Usa l'immagine ufficiale di OpenResty come base
+# Use the official OpenResty image as base
 FROM openresty/openresty:1.25.3.2-0-bullseye
 
-# Installa le dipendenze e luarocks
-RUN apt-get update && \
-    apt-get install -y wget unzip build-essential libreadline-dev && \
-    wget https://luarocks.org/releases/luarocks-3.7.0.tar.gz && \
-    tar zxpf luarocks-3.7.0.tar.gz && \
-    cd luarocks-3.7.0 && \
-    ./configure --with-lua=/usr/local/openresty/luajit \
-        --with-lua-include=/usr/local/openresty/luajit/include/luajit-2.1 && \
-    make && make install && \
-    cd .. && rm -rf luarocks-3.7.0*
+# lua-resty-redis is included with OpenResty by default, no need to install via luarocks
 
-# Installa il modulo Lua Redis
-RUN luarocks install lua-resty-redis
-
-# Copia il tuo script Lua e la configurazione NGINX nel container
+# Copy the Lua script and the NGINX configuration in the container
 COPY ./redis.lua /etc/nginx/redis.lua
 COPY ./redis.conf /etc/nginx/conf.d/default.conf
 
-# Espone la porta standard di NGINX
+# Expose the standard NGINX port
 EXPOSE 80
 
-# Avvia OpenResty
+# Start OpenResty
 CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]
